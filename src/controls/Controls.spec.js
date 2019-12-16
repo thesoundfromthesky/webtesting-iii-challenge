@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import Controls from "./Controls";
 
 // Test away!
@@ -13,19 +13,8 @@ import Controls from "./Controls";
 describe("<Controls />", () => {
   const state = {
     locked: false,
-    closed: false,
-    toggleLocked: jest.fn(() => {
-      state.locked = !state.locked;
-    }),
-    toggleClosed: jest.fn(() => {
-      state.closed = !state.closed;
-    })
+    closed: false
   };
-  beforeEach(() => {
-    state.locked = false;
-    state.closed = false;
-    jest.clearAllMocks();
-  });
 
   it("should render without error", () => {
     render(<Controls {...state} />);
@@ -41,36 +30,7 @@ describe("<Controls />", () => {
     expect(closeGate).toBeInTheDocument();
   });
 
-  
-  it("Close Gate should be Open Gate when clicked", ()=>{
-    const { getByText , rerender } = render(<Controls {...state} />);
-    const closeGate = getByText("Close Gate");
-    
-    fireEvent.click(closeGate);
-    rerender(<Controls {...state} />);
-    expect(closeGate).toHaveTextContent("Open Gate");
-  })
-
-  it("Lock Gate should not work when Close Gate is in the document", ()=>{
-    const { getByText , rerender } = render(<Controls {...state} />);
-    const lockGate = getByText("Lock Gate");
-    
-    fireEvent.click(lockGate);
-    rerender(<Controls {...state} />);
-    expect(lockGate).toHaveTextContent("Lock Gate");
-  })
-
-  it("Lock Gate should be Unlock Gate when Open Gate is in the document", ()=>{
-    state.closed = true;
-    const { getByText , rerender } = render(<Controls {...state} />);
-    const lockGate = getByText("Lock Gate");
-    
-    fireEvent.click(lockGate);
-    rerender(<Controls {...state} />);
-    expect(lockGate).toHaveTextContent("Unlock Gate");
-  })
-
-  it("Open Gate should not work when Unlock Gate is in the document", () => {
+  it("sholud have Unlock Gate and Open Gate", () => {
     state.locked = true;
     state.closed = true;
     const { getByText } = render(<Controls {...state} />);
@@ -80,10 +40,5 @@ describe("<Controls />", () => {
 
     expect(unlockGate).toBeInTheDocument();
     expect(openGate).toBeInTheDocument();
-
-     
-    fireEvent.click(openGate);
-    expect(openGate).toHaveTextContent("Open Gate");
   });
-
 });
